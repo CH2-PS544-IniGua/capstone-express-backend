@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
+const dotenv = require('dotenv');
+dotenv.config();
 
-const serviceAccount = require("../serviceaccount.json");
+const serviceAccount = JSON.parse(Buffer.from(process.env.SERVICE_ACCOUNT, 'base64').toString());
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -60,7 +62,6 @@ async function findUserById(userId) {
 }
 async function registerUser(user) {
   // Check if username is already taken
-  console.log("registering user");
   if (await isUsernameTaken(user.username)) {
     throw new Error("Username already taken");
   }
