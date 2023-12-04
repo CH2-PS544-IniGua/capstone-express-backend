@@ -2,7 +2,7 @@ FROM node:15.4
 
 WORKDIR /app
 
-COPY COPY package*.json ./
+COPY package*.json ./
 RUN npm install
 COPY . .
 CMD node index.js
