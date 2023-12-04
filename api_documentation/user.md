@@ -3,7 +3,7 @@ This document provides a brief overview of the user service API and its routes.
 
 The User Service provides Login/Register services and also basic CRUD (Create, Read, Update, Delete) operations for users.
 
-# POST /users/register
+# POST /user/register
 Register a new user.
 
 Request Body
@@ -26,7 +26,7 @@ json
   "username": "<string>"
 }
 ```
-# POST /users/login
+# POST /user/login
 Login a user.
 
 Request Body
@@ -74,7 +74,7 @@ json
   }
 }
 ```
-## GET /users
+## GET /user
 Get a list of all users.
 
 Response
@@ -92,7 +92,7 @@ json
   ]
 }
 ```
-# DELETE /users/:id
+# DELETE /user/:id
 Delete a user by ID.
 
 Response
@@ -106,7 +106,7 @@ json
   }
 }
 ```
-# PUT /users/:id
+# PUT /user/:id
 Update a user by ID.
 
 Request Body
@@ -130,7 +130,7 @@ json
   }
 }
 ```
-# GET /users/:id
+# GET /user/:id
 Get a user by ID.
 
 Response
