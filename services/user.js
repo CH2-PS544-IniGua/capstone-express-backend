@@ -21,7 +21,7 @@ async function registerUser(user) {
     const docRef = db.collection('users').doc();
     await docRef.set({
       username: user.username,
-      password: hashedPassword,
+      hashed_password: hashedPassword,
     });
     return docRef.id;
   } catch (error) {
@@ -83,7 +83,7 @@ async function registerUser(user) {
     const docRef = db.collection('users').doc();
     await docRef.set({
       username: user.username,
-      password: hashedPassword,
+      hashed_password: hashedPassword,
     });
     return docRef.id;
   } catch (error) {
