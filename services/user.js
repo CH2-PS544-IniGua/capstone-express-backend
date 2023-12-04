@@ -10,6 +10,11 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
+async function isUsernameTaken(username) {
+  const snapshot = await db.collection('users').where('username', '==', username).get();
+  return !snapshot.empty;
+}
+
 async function registerUser(user) {
   try {
     // Check if username is already taken
@@ -103,7 +108,7 @@ async function loginUser(user) {
     const doc = snapshot.docs[0];
     const data = doc.data();
 
-    if (await bcrypt.compare(user.password, data.password)) {
+    if (await bcrypt.compare(user.password, data.hashed_password)) {
       return { id: doc.id, username: data.username };
     } else {
       return null;
