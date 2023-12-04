@@ -1,6 +1,8 @@
 const admin = require('firebase-admin');
 
-const serviceAccount = require('serviceaccount.json');
+const serviceAccount = require('../serviceaccount.json');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -17,7 +19,6 @@ async function insertUser(user) {
       password: hashedPassword,
       username: user.username,
       email: user.email,
-      account_type: user.account_type,
     });
     return docRef.id;
   } catch (error) {
