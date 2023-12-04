@@ -1,7 +1,54 @@
 # API Documentation for User Service
 This document provides a brief overview of the user service API and its routes.
 
-The User Service provides basic CRUD (Create, Read, Update, Delete) operations for users in an Elevarm database.
+The User Service provides Login/Register services and also basic CRUD (Create, Read, Update, Delete) operations for users.
+
+# POST /users/register
+Register a new user.
+
+Request Body
+json
+```
+{
+  "password": "<string>",
+  "username": "<string>",
+}
+```
+All fields are required.
+
+Response
+json
+```
+{
+  "status": "success",
+  "message": "User registered successfully",
+  "data": "<JWT Token>"
+  "username": "<string>"
+}
+```
+# POST /users/login
+Login a user.
+
+Request Body
+json
+```
+{
+  "username": "<string>",
+  "password": "<string>"
+}
+```
+All fields are required.
+
+Response
+json
+```
+{
+  "status": "success",
+  "message": "User registered successfully",
+  "data": "<JWT Token>"
+  "username": "<string>"
+}
+```
 
 # POST /user
 Create a new user.
@@ -11,9 +58,7 @@ json
 ```
 {
   "name": "<string>",
-  "password": "<string>",
   "username": "<string>",
-  "email": "<string>"
 }
 ```
 All fields are required.
@@ -40,12 +85,9 @@ json
   "message": "Users retrieved successfully",
   "data": [
     {
-      "_id": "<ObjectId>",
       "id": "<string>",
-      "name": "<string>",
-      "password": "<string>",
+      "hashed_password": "<string>",
       "username": "<string>",
-      "email": "<string>"
     }
   ]
 }
@@ -71,9 +113,8 @@ Request Body
 json
 ```
 {
-  "name": "<string>",
   "username": "<string>",
-  "email": "<string>"
+  "password": "<string>",
 }
 ```
 All fields are optional.
@@ -99,68 +140,9 @@ json
   "status": "success",
   "message": "User retrieved successfully",
   "data": {
-    "_id": "<ObjectId>",
     "id": "<string>",
-    "name": "<string>",
-    "password": "<string>",
+    "hashed_password": "<string>",
     "username": "<string>",
-    "email": "<string>"
   }
-}
-```
-POST /users/register
-Register a new user.
-
-Request Body
-json
-```
-{
-  "name": "<string>",
-  "password": "<string>",
-  "username": "<string>",
-  "email": "<string>",
-  "account_type": "<string>"
-}
-```
-All fields are required.
-
-Response
-json
-```
-{
-  "status": "success",
-  "message": "User registered successfully",
-  "data": {
-    "insertedId": "<ObjectId>"
-  }
-}
-```
-# POST /users/login
-Login a user.
-
-Request Body
-json
-```
-{
-  "username": "<string>",
-  "password": "<string>"
-}
-```
-All fields are required.
-
-Response
-json
-```
-{
-  "status": "success",
-  "message": "User logged in successfully",
-  "data": {
-    "_id": "<ObjectId>",
-    "name": "<string>",
-    "username": "<string>",
-    "email": "<string>",
-    "account_type": "<string>"
-  },
-  "token": "<JWT>"
 }
 ```
