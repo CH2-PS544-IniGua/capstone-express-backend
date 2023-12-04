@@ -1,8 +1,6 @@
 const admin = require('firebase-admin');
 
 const serviceAccount = require('../serviceaccount.json');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -15,18 +13,16 @@ async function isUsernameTaken(username) {
   return !snapshot.empty;
 }
 
-async function registerUser(user) {
+async function insertUser(user) {
   try {
     // Check if username is already taken
     if (await isUsernameTaken(user.username)) {
       throw new Error("Username already taken");
     }
-
-    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
     const docRef = db.collection('users').doc();
     await docRef.set({
       username: user.username,
-      hashed_password: hashedPassword,
+      hashed_password: user.password,
     });
     return docRef.id;
   } catch (error) {
@@ -84,11 +80,10 @@ async function registerUser(user) {
       throw new Error("Username already taken");
     }
 
-    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
     const docRef = db.collection('users').doc();
     await docRef.set({
       username: user.username,
-      hashed_password: hashedPassword,
+      hashed_password: user.password,
     });
     return docRef.id;
   } catch (error) {
@@ -108,7 +103,7 @@ async function loginUser(user) {
     const doc = snapshot.docs[0];
     const data = doc.data();
 
-    if (await bcrypt.compare(user.password, data.hashed_password)) {
+    if (user.password == data.hashed_password){
       return { id: doc.id, username: data.username };
     } else {
       return null;
