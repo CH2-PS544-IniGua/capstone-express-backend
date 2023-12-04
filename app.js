@@ -3,7 +3,8 @@ const routeUser = require("./routes/routeUser");
 
 const app = express();
 var cors = require('cors')
-const port = 8080;
+const PORT = process.env.PORT || 3000;
+
 
 app.use(express.json());
 app.use(cors())
