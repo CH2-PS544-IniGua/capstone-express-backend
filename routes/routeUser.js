@@ -5,11 +5,7 @@ const jwtservice = require('../middleware/jwt');
 
 router.post('/', async (req, res) => {
   try {
-    const { name, password, username, email } = req.body;
-    if (!name) {
-      res.status(400).json({ status: 'error', message: 'Missing name' });
-      return;
-    }
+    const { password, username } = req.body;
     if (!password) {
       res.status(400).json({ status: 'error', message: 'Missing password' });
       return;
@@ -18,12 +14,8 @@ router.post('/', async (req, res) => {
       res.status(400).json({ status: 'error', message: 'Missing username' });
       return;
     }
-    if (!email) {
-      res.status(400).json({ status: 'error', message: 'Missing email' });
-      return;
-    }
 
-    const result = await userService.insertUser({ name, password, username, email });
+    const result = await userService.insertUser({ password, username });
     res.status(200).json({ status: 'success', message: 'User created successfully', data: result });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'Failed to create user', error });
@@ -53,11 +45,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const userId = req.params.id;
-    const { name, password, username, email } = req.body;
-    if (!name) {
-      res.status(400).json({ status: 'error', message: 'Missing name' });
-      return;
-    }
+    const { password, username } = req.body;
     if (!password) {
       res.status(400).json({ status: 'error', message: 'Missing password' });
       return;
@@ -66,12 +54,8 @@ router.put('/:id', async (req, res) => {
       res.status(400).json({ status: 'error', message: 'Missing username' });
       return;
     }
-    if (!email) {
-      res.status(400).json({ status: 'error', message: 'Missing email' });
-      return;
-    }
 
-    const result = await userService.updateUser(userId, { name, password, username, email });
+    const result = await userService.updateUser(userId, { password, username });
     res.status(200).json({ status: 'success', message: 'User updated successfully', data: result });
   } catch (error) {
     res.status(500).json({ status: 'error', message: 'Failed to update user', error });
@@ -89,11 +73,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   try {
-    const { name, password, username, email } = req.body;
-    if (!name) {
-      res.status(400).json({ status: 'error', message: 'Missing name' });
-      return;
-    }
+    const { password, username } = req.body;
     if (!password) {
       res.status(400).json({ status: 'error', message: 'Missing password' });
       return;
@@ -102,12 +82,8 @@ router.post('/register', async (req, res) => {
       res.status(400).json({ status: 'error', message: 'Missing username' });
       return;
     }
-    if (!email) {
-      res.status(400).json({ status: 'error', message: 'Missing email' });
-      return;
-    }
 
-    const result = await userService.registerUser({ name, password, username, email });
+    const result = await userService.registerUser({ password, username });
     const token = await jwtservice.generateAccessToken({ username: username}, 1800);
     res.status(200).json({ status: 'success', message: 'User registered successfully', data: token, username: username });
   } catch (error) {
