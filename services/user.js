@@ -10,19 +10,22 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-async function insertUser(user) {
+async function registerUser(user) {
   try {
+    // Check if username is already taken
+    if (await isUsernameTaken(user.username)) {
+      throw new Error("Username already taken");
+    }
+
     const hashedPassword = await bcrypt.hash(user.password, saltRounds);
     const docRef = db.collection('users').doc();
     await docRef.set({
-      name: user.name,
-      password: hashedPassword,
       username: user.username,
-      email: user.email,
+      password: hashedPassword,
     });
     return docRef.id;
   } catch (error) {
-    console.error("Error adding document: ", error);
+    console.error("Error registering user: ", error);
   }
 }
 
@@ -69,48 +72,46 @@ async function findUserById(userId) {
     console.error("Error getting document: ", error);
   }
 }
-
 async function registerUser(user) {
   try {
+    // Check if username is already taken
+    if (await isUsernameTaken(user.username)) {
+      throw new Error("Username already taken");
+    }
+
+    const hashedPassword = await bcrypt.hash(user.password, saltRounds);
     const docRef = db.collection('users').doc();
     await docRef.set({
-      name: user.name,
-      password: user.password,
       username: user.username,
-      email: user.email,
-      account_type: user.account_type,
+      password: hashedPassword,
     });
     return docRef.id;
   } catch (error) {
-    console.error("Error adding document: ", error);
+    console.error("Error registering user: ", error);
   }
 }
+
 async function loginUser(user) {
   try {
-    const usersRef = db.collection('users');
-    const snapshot = await usersRef.where('username', '==', user.username).get();
+    const snapshot = await db.collection('users').where('username', '==', user.username).limit(1).get();
     
     if (snapshot.empty) {
       console.log('No matching documents.');
       return null;
-    }  
-
-    let userData = null;
-
-    for (const doc of snapshot.docs) {
-      const data = doc.data();
-      if (await bcrypt.compare(user.password, data.password)) {
-        userData = { id: doc.id, ...data };
-        break; // Exit the loop since we found a match
-      }
     }
 
-    return userData;
+    const doc = snapshot.docs[0];
+    const data = doc.data();
+
+    if (await bcrypt.compare(user.password, data.password)) {
+      return { id: doc.id, username: data.username };
+    } else {
+      return null;
+    }
   } catch (error) {
-    console.error("Error getting documents: ", error);
+    console.error("Error logging in user: ", error);
   }
 }
-
 
 module.exports = {
   insertUser,
