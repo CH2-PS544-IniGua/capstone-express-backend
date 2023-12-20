@@ -5,11 +5,6 @@ async function getAllCatalogItems(search, page, limit) {
     try {
       let query = db.collection('catalog');
   
-      // Add search functionality
-      if (search) {
-        query = query.orderBy('title').startAt(search).endAt(search + '\uf8ff');
-      }
-  
       // Check if page and limit are numbers. If not, default to fetching all items
       const isPageNumber = !isNaN(page);
       const isLimitNumber = !isNaN(limit);
@@ -23,7 +18,17 @@ async function getAllCatalogItems(search, page, limit) {
   
       const snapshot = await query.get();
   
-      const catalogItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      let catalogItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // filter by search
+      if (search) {
+        const searchLower = search.toLowerCase();
+        catalogItems = catalogItems.filter(item => {
+          const titleLower = item.title.toLowerCase();
+          return titleLower.includes(searchLower);
+        });
+      }
+
       return catalogItems;
     } catch (error) {
       console.error('Error in getAllCatalogItems:', error);
