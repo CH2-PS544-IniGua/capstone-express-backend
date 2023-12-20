@@ -9,24 +9,27 @@ async function getAllCatalogItems(search, page, limit) {
       const isPageNumber = !isNaN(page);
       const isLimitNumber = !isNaN(limit);
   
-      if (isPageNumber) {
-        const limitNum = isLimitNumber ? Number(limit) : 8;
-        // Implement pagination if page and limit are numbers
-        const startIndex = (page - 1) * limitNum;
-        query = query.offset(startIndex).limit(limitNum);
-      } // If either page or limit isn't a number, we don't paginate and fetch all items
-  
       const snapshot = await query.get();
   
       let catalogItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      // filter by search
+      // filter search to title, overview, and short_desc
       if (search) {
         const searchLower = search.toLowerCase();
         catalogItems = catalogItems.filter(item => {
           const titleLower = item.title.toLowerCase();
-          return titleLower.includes(searchLower);
+          const overviewLower = item.overview.toLowerCase();
+          const short_descLower = item.short_desc.toLowerCase();
+          return titleLower.includes(searchLower) || overviewLower.includes(searchLower) || short_descLower.includes(searchLower);
         });
+      }
+
+      // if isPageNumber, add pagination and limit
+      if (isPageNumber) {
+        const limitNum = isLimitNumber ? Number(limit) : 8;
+        // Implement pagination if page and limit are numbers
+        const startIndex = (page - 1) * limitNum;
+        catalogItems = catalogItems.slice(startIndex, startIndex + limitNum);
       }
 
       return catalogItems;
