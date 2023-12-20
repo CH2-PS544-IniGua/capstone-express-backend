@@ -41,21 +41,20 @@ Retrieves all catalog items, with optional search, pagination, and sorting.
     ]
   }
   
-### Get Specific History Item by ID
+### Get Catalog Item by ID
 `GET /catalog/:id`
 
-Retrieves a specific history item by its ID for a given user.
+Retrieves a specific catalog item by its ID.
 
 - **Query Parameters:**
-    - username: The username of the user.
-    - historyId: The ID of the history item to retrieve.
+    - id: The ID of the catalog item to retrieve.
 
 - **Response:**
 
 ```json
 {
   "status": "success",
-  "message": "History item retrieved successfully",
+  "message": "Catalog item retrieved successfully",
   "data": 
       {
         "id": "<string>",
