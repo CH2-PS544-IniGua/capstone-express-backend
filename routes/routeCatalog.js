@@ -30,4 +30,28 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.get('/recommendation/clothes/:color', async (req, res) => {
+  const { color } = req.params;
+
+  try {
+    const catalogItems = await catalogService.getRecommendationClothes(color);
+    res.status(200).json({ status: 'success', message: 'Catalog items retrieved successfully', data: catalogItems });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 'error', message: 'Failed to retrieve catalog items', error: error.message });
+  }
+});
+
+router.get('/recommendation/pants/:color', async (req, res) => {
+  const { color } = req.params;
+
+  try {
+    const catalogItems = await catalogService.getRecommendationPants(color);
+    res.status(200).json({ status: 'success', message: 'Catalog items retrieved successfully', data: catalogItems });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 'error', message: 'Failed to retrieve catalog items', error: error.message });
+  }
+});
+
 module.exports = router;

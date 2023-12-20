@@ -54,8 +54,76 @@ async function getAllCatalogItems(search, page, limit) {
       throw error;
     }
   }
+
+  async function getRecommendationClothes(color) {
+    try {
+      // TODO: Implement color recommendation with table of clothes color recommendations from ML, GET 3 highest color recommendations
+
+      const colors = ['Black','Brown','Gray', 'Green','Orange','Pink','Purple','Red','White','Yellow','Cream']
+      // THIS IS DUMMY FUNCTION to get 3  colors
+      const randomColors = []
+      while (randomColors.length < 3) {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)]
+        if (!randomColors.includes(randomColor)) {
+          randomColors.push(randomColor)
+        }
+      }
+
+      // get catalog with type clothes and color in randomColors
+      const catalogRef = db.collection('catalog')
+      const snapshot = await catalogRef.where('type', '==', 'clothes').where('color', 'in', randomColors).get()
+      const catalogItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // sort by randomColor order
+      const catalogItemsSorted = []
+      randomColors.forEach(color => {
+        catalogItemsSorted.push(...catalogItems.filter(item => item.color === color))
+      })
+
+      return catalogItemsSorted
+    } catch (error) {
+      console.error('Error in getRecommendationClothes:', error);
+      throw error;
+    }
+  }
+
+  async function getRecommendationPants(color) {
+    try {
+      // TODO: Implement color recommendation with table of pants color recommendations from ML, GET 3 highest color recommendations
+
+      const colors = ['Black','Brown','Gray', 'Green','Orange','Pink','Purple','Red','White','Yellow','Cream']
+      // THIS IS DUMMY FUNCTION to get 3  colors
+      const randomColors = []
+      while (randomColors.length < 3) {
+        const randomColor = colors[Math.floor(Math.random() * colors.length)]
+        if (!randomColors.includes(randomColor)) {
+          randomColors.push(randomColor)
+        }
+      }
+
+      // get catalog with type pants and color in randomColors
+      const catalogRef = db.collection('catalog')
+      const snapshot = await catalogRef.where('type', '==', 'pants').where('color', 'in', randomColors).get()
+      const catalogItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // sort by randomColor order
+      const catalogItemsSorted = []
+      randomColors.forEach(color => {
+        catalogItemsSorted.push(...catalogItems.filter(item => item.color === color))
+      })
+
+      return catalogItemsSorted
+    }
+    catch (error) {
+      console.error('Error in getRecommendationPants:', error);
+      throw error;
+    }
+  }
+
   
   module.exports = {
     getAllCatalogItems,
-    getCatalogItemById, // Export the new function
+    getCatalogItemById,
+    getRecommendationClothes,
+    getRecommendationPants,
   };
