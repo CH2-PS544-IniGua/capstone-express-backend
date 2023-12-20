@@ -16,25 +16,23 @@ async function getUserHistory(username) {
   }
 }
 
-async function addHistoryItem(username, item) {
+async function getHistoryItemById(username, historyId) {
   try {
-    // Reference to the user's history sub-collection
-    const historyRef = db.collection('history').doc(username).collection('history');
+    const historyDocRef = db.collection('history').doc(username).collection('history').doc(historyId);
+    const doc = await historyDocRef.get();
 
-    // Add a new document with a generated id
-    const docRef = await historyRef.add({
-      ...item,
-      datetime: admin.firestore.FieldValue.serverTimestamp() // Use server timestamp
-    });
+    if (!doc.exists) {
+      throw new Error('History item not found');
+    }
 
-    return docRef.id; // Return the id of the created document
+    return { id: doc.id, ...doc.data() };
   } catch (error) {
-    console.error('Error in addHistoryItem:', error);
+    console.error('Error in getHistoryItemById:', error);
     throw error;
   }
 }
 
 module.exports = {
   getUserHistory,
-  addHistoryItem,
+  getHistoryItemById,
 };

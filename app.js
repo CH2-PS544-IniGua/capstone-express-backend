@@ -1,6 +1,7 @@
 const express = require('express');
 const routeUser = require("./routes/routeUser");
 const routeHistory = require("./routes/routeHistory");
+const routeCatalog = require("./routes/routeCatalog");
 
 const app = express();
 var cors = require('cors')
@@ -17,6 +18,7 @@ app.use(
 
 app.use("/user", routeUser);
 app.use("/history", routeHistory);
+app.use("/catalog", routeCatalog);
 
 app.get("/", (req, res) => {
   res.json({ message: "ok" });

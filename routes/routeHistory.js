@@ -15,17 +15,19 @@ router.get('/:username', async (req, res) => {
   }
 });
 
-// Add to user history
-router.post('/:username', async (req, res) => {
-  const { username } = req.params;
-  const item = req.body;
+router.get('/:username/:historyId', async (req, res) => {
+  const { username, historyId } = req.params;
 
   try {
-    const itemId = await historyService.addHistoryItem(username, item);
-    res.status(201).json({ status: 'success', message: 'History item added successfully', itemId });
+    const historyItem = await historyService.getHistoryItemById(username, historyId);
+    res.status(200).json({ status: 'success', message: 'History item retrieved successfully', data: historyItem });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ status: 'error', message: 'Failed to add history item', error: error.message });
+    if (error.message === 'History item not found') {
+      res.status(404).json({ status: 'error', message: error.message });
+    } else {
+      console.error(error);
+      res.status(500).json({ status: 'error', message: 'Failed to retrieve history item', error: error.message });
+    }
   }
 });
 
