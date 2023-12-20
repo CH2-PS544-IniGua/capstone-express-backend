@@ -1,27 +1,40 @@
-const { Storage } = require('@google-cloud/storage');
-const dotenv = require('dotenv');
+const admin = require('./db');
+const db = admin.firestore();
 
-dotenv.config();
-
-// Initializes the Google Cloud client library
-const storage = new Storage({
-  credentials: JSON.parse(Buffer.from(process.env.SERVICE_ACCOUNT, 'base64').toString()),
-});
-
-const bucketName = 'application-inigua';
-
-async function getFiles() {
+async function getUserHistory(username) {
   try {
-    const [files] = await storage.bucket(bucketName).getFiles();
-    return files.map(file => {
-      return `https://storage.googleapis.com/${bucketName}/${file.name}`;
-    });
+    // Reference to the user's history collection
+    const historyRef = db.collection('history').doc(username).collection('history');
+    const snapshot = await historyRef.get();
+
+    // Map over the documents in the 'history' sub-collection
+    const history = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return history;
   } catch (error) {
-    console.error('Error in getFiles:', error);
+    console.error('Error in getUserHistory:', error);
+    throw error;
+  }
+}
+
+async function addHistoryItem(username, item) {
+  try {
+    // Reference to the user's history sub-collection
+    const historyRef = db.collection('history').doc(username).collection('history');
+
+    // Add a new document with a generated id
+    const docRef = await historyRef.add({
+      ...item,
+      datetime: admin.firestore.FieldValue.serverTimestamp() // Use server timestamp
+    });
+
+    return docRef.id; // Return the id of the created document
+  } catch (error) {
+    console.error('Error in addHistoryItem:', error);
     throw error;
   }
 }
 
 module.exports = {
-  getFiles,
+  getUserHistory,
+  addHistoryItem,
 };
