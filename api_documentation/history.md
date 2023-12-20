@@ -40,7 +40,7 @@ Retrieves the history for a specific user.
 
 Retrieves a specific history item by its ID for a given user.
 
-- **Query Parameters:**
+- **URL Parameters:**
     - username: The username of the user.
     - historyId: The ID of the history item to retrieve.
 

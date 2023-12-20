@@ -46,7 +46,7 @@ Retrieves all catalog items, with optional search, pagination, and sorting.
 
 Retrieves a specific catalog item by its ID.
 
-- **Query Parameters:**
+- **URL Parameters:**
     - id: The ID of the catalog item to retrieve.
 
 - **Response:**
@@ -68,3 +68,64 @@ Retrieves a specific catalog item by its ID.
         "price": <number>
       }
 }
+```
+
+### Get Clothing Recommendations by Color
+`GET /catalog/recommendation/clothes/:color`
+
+Retrieves clothing catalog items based on color recommendation.
+
+- **URL Parameters:**
+    - color: The skin color, to filter recommended clothes by.
+
+- **Response:**
+
+```json
+{
+  "status": "success",
+  "message": "Catalog items retrieved successfully",
+    "data": [
+      {
+        "id": "<string>",
+        "title": "<string>",
+        "type": "<string>",
+        "image": "<string_url>",
+        "overview": "<string>",
+        "color": "<string>",
+        "material": "<string>",
+        "short_desc": "<string>",
+        "price": <number>
+      }
+      // ...more catalog items
+    ]
+}
+```
+
+### Get Pants Recommendations by Color
+`GET /catalog/recommendation/pants/:color`
+
+Retrieves pants catalog items based on color recommendation.
+
+- **URL Parameters:**
+    - color: The clothes color, to filter recommended pants by.
+
+- **Response:**
+
+```json
+{
+  "status": "success",
+  "message": "Catalog items retrieved successfully",
+    "data": 
+      {
+        "id": "<string>",
+        "title": "<string>",
+        "type": "<string>",
+        "image": "<string_url>",
+        "overview": "<string>",
+        "color": "<string>",
+        "material": "<string>",
+        "short_desc": "<string>",
+        "price": <number>
+      }
+}
+```
