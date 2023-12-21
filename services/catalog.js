@@ -1,7 +1,9 @@
 const admin = require('./db'); // Make sure this points to the file where Firebase Admin is initialized
 const db = admin.firestore();
 
-const skin_body = require('../data/percentage_skin_body.json');
+const skin_body1 = require('../data/percentage_skin_body1.json');
+const body1_body2 = require('../data/percentage_body1_body2.json');
+
 
 async function getAllCatalogItems(search, page, limit) {
     try {
@@ -60,7 +62,7 @@ async function getAllCatalogItems(search, page, limit) {
   async function getRecommendationClothes(color) {
     try {
       // get 3 colors with highest percentage in skin_body based on "color"
-      const colorPercentage = skin_body[color]
+      const colorPercentage = skin_body1[color]
       const sortedColorPercentage = Object.keys(colorPercentage).sort((a,b) => colorPercentage[b]-colorPercentage[a])
       const top3Colors = sortedColorPercentage.slice(0,3)
 
@@ -84,26 +86,19 @@ async function getAllCatalogItems(search, page, limit) {
 
   async function getRecommendationPants(color) {
     try {
-      // TODO: Implement color recommendation with table of pants color recommendations from ML, GET 3 highest color recommendations
-
-      const colors = ['Black','Brown','Gray', 'Green','Orange','Pink','Purple','Red','White','Yellow','Cream']
-      // THIS IS DUMMY FUNCTION to get 3  colors
-      const randomColors = []
-      while (randomColors.length < 3) {
-        const randomColor = colors[Math.floor(Math.random() * colors.length)]
-        if (!randomColors.includes(randomColor)) {
-          randomColors.push(randomColor)
-        }
-      }
+      // get 3 colors with highest percentage in body1_body2 based on "color"
+      const colorPercentage = body1_body2[color]
+      const sortedColorPercentage = Object.keys(colorPercentage).sort((a,b) => colorPercentage[b]-colorPercentage[a])
+      const top3Colors = sortedColorPercentage.slice(0,3)
 
       // get catalog with type pants and color in randomColors
       const catalogRef = db.collection('catalog')
-      const snapshot = await catalogRef.where('type', '==', 'pants').where('color', 'in', randomColors).get()
+      const snapshot = await catalogRef.where('type', '==', 'pants').where('color', 'in', top3Colors).get()
       const catalogItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      // sort by randomColor order
+      // sort by top3Colors order
       const catalogItemsSorted = []
-      randomColors.forEach(color => {
+      top3Colors.forEach(color => {
         catalogItemsSorted.push(...catalogItems.filter(item => item.color === color))
       })
 
