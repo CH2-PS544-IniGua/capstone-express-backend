@@ -82,7 +82,7 @@ async function loginUser(user) {
   if (user.password == data.hashed_password) {
     return { id: doc.id, username: data.username };
   } else {
-    return null;
+    throw new Error("Password does not match");
   }
 }
 

@@ -93,13 +93,16 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-  const user = await userService.loginUser(req.body);
-  if (user) {
+  try {
+    const user = await userService.loginUser(req.body);
+    
     const token = await jwtservice.generateAccessToken({ user_id: user.id, username: user.username}, 1800);
+
     res.json({ status: 'success', message: 'User logged in successfully', data: token, username: user.username });
-  } else {
+  } catch {
     res.status(401).json({ status: 'error', message: 'Invalid username or password' });
   }
+  
 });
 
 module.exports = router;
