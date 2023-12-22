@@ -5,7 +5,11 @@ async function getUserHistory(username) {
   try {
     // Reference to the user's history collection
     const historyRef = db.collection('history').doc(username).collection('history');
-    const snapshot = await historyRef.get();
+
+    // Modify the reference to order by the date (assuming the field is named 'dateTime')
+    const orderedHistoryRef = historyRef.orderBy('datetime', 'desc'); // 'desc' for newest first, use 'asc' for oldest first
+
+    const snapshot = await orderedHistoryRef.get();
 
     // Map over the documents in the 'history' sub-collection
     const history = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
